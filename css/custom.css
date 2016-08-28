@@ -1,0 +1,147 @@
+.reveal .reg-case {
+  text-transform: none;
+}
+
+.reveal pre code {
+  padding: 1em;
+}
+
+.hidden {
+  display: none;
+}
+
+.full-viz {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+div#keyboard {
+  margin: auto !important;
+}
+
+button {
+  font-family: "Quicksand", sans-serif;
+  font-weight: 500;
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  margin: 0.25em;
+  /*background: transparent;*/
+  background-color: inherit;
+  border: 2px solid #333;
+  outline: none;
+}
+
+button:active {
+  background: #333;
+  color: white;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  margin: 18px 0;
+  width: 250px;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #333;
+  border-radius: 1.3px;
+  border: 0.2px solid #333;
+}
+input[type=range]::-webkit-slider-thumb {
+  border: 1px solid #333;
+  height: 16px;
+  width: 16px;
+  border-radius: 16px;
+  background: #333;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #333;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #333;
+  border-radius: 1.3px;
+  border: 0.2px solid #333;
+}
+input[type=range]::-moz-range-thumb {
+  border: 1px solid #333;
+  height: 16px;
+  width: 16px;
+  border-radius: 16px;
+  background: #333;
+  cursor: pointer;
+}
+
+.reveal img.img-clear {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #333;
+  border-radius: 2.6px;
+}
+input[type=range]::-ms-fill-upper {
+  background: #333;
+  border: 0.2px solid #333;
+  border-radius: 2.6px;
+}
+input[type=range]::-ms-thumb {
+  border: 1px solid #333;
+  height: 16px;
+  width: 16px;
+  border-radius: 16px;
+  background: #333;
+  cursor: pointer;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #333;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #333;
+}
+
+input[type=range].vrange {
+  /*-webkit-appearance: slider-vertical;*/
+  /*-webkit-appearance: slider-vertical;*/
+  transform: rotateZ(270deg);
+}
+
+
+.adsr-input {
+  display: inline-block;
+  width: 24%;
+}
+
+img.theremin-hand {
+  position: absolute;
+  left:50%;
+  top:0%;
+}

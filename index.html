@@ -1,0 +1,675 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>WebAudio</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/sky.css">
+		<link rel="stylesheet" href="css/custom.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement('link')
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<canvas id="viz2d" class="full-viz"></canvas>
+		<canvas id="viz3d" class="full-viz"></canvas>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-color="#E6E8BF">
+					<!-- Slide 1 -->
+					<section>
+						<h1 class='reg-case'>The Sound of JavaScript</h1>
+						<br>
+						<h3>Barak Chamo</h3>
+						<h4>@GoFoolhardy</h4>
+					</section>
+
+					<section>
+						<h2 class='reg-case'>Content Warning</h2>
+						<h3 class='reg-case'>🔊 loud music 🔊</h3>
+						<h3 class='reg-case'>💫 fast animations 💫</h3>
+					</section>
+
+					<!-- Slide 2 -->
+					<section>
+						<h1 class='reg-case'>Let's make some noise<br> in the browser!</h1>
+					</section>
+
+					<!-- Slide 3 -->
+					<section>
+						<h3 class='reg-case'>WebAudio + Web MIDI + Visualization =<br><h2> 🎉💥😱💥😱💥😱💥🎉</h2></h3>
+					</section>
+				</section>
+
+
+				<!-- Slide 4 -->
+				<section data-background-color="#DDDA00">
+					<section><h2 class='reg-case'>🎶 WebAudio 🎶</h2></section>
+					<section><h3 class='reg-case'>WebAudio is an interface for controlling audio on the web.</h3></section>
+					<section><h3 class='reg-case'>Operating in an <strong>Audio Context</strong>, we perform audio operations using <strong>Audio Nodes</strong> and link them together to create a <strong>Modular Routing Graph</strong>.</h3></section>
+					<section>
+						<button onclick='playFirstDemo(this, event)'>play</button>
+					</section>
+				</section>
+
+				<!-- Slide 5 -->
+				<section data-background-color="#DDDA00">
+					<section><h2 class='reg-case'>🎶 Synthesis 🎶</h2></section>
+					<section>
+						<img src="images/ms20.jpg" class="stretch"/>
+					</section>
+					<section>
+						<img src="images/front.gif" class="stretch"/>
+					</section>
+					<section>
+						<img src="images/diagram.gif" class="stretch"/>
+					</section>
+					<section>
+						<img src="images/diva.jpg" class="stretch"/>
+					</section>
+					<section>
+						<img src="images/signal.jpg" class="stretch"/>
+					</section>
+				</section>
+
+				<!-- Slide 12 -->
+				<section data-background-color="#DDDA00">
+					<section><h2 class='reg-case'>Oscillators</h2></section>
+					<section>
+						<img src="images/waveforms.png" alt="">
+					</section>
+					<section>
+<pre><code>// Get audio context
+const context = new AudioContext()
+
+// Create 2 nodes, an oscillator and a gain
+const gain = context.createGain()
+const osc = context.createOscillator()
+
+// Configure the oscillator to play a sawtooth waveshape
+osc.type = {WAVESHAPE}
+
+// Connect the oscillator and gain to the audio output
+osc.connect(gain)
+gain.connect(context.destination)
+
+// Start the oscillator
+osc.start(0)</code></pre>
+					</section>
+
+					<section>
+						<button onclick='playWaveshape("sine")'>sine</button>
+						<button onclick='playWaveshape("square")'>square</button>
+						<button onclick='playWaveshape("triangle")'>triangle</button>
+						<button onclick='playWaveshape("sawtooth")'>sawtooth</button>
+					</section>
+
+					<section>
+						<img class="stretch" src="images/harmonics.gif" alt="">
+					</section>
+
+					<section>
+						<img src="images/harmonic.png" alt="" class="stretch">
+					</section>
+
+					<section>
+<pre><code>/* Create 3 oscillators, for playing a triad */
+const osc1 = context.createOscillator()
+const osc2 = context.createOscillator()
+const osc3 = context.createOscillator()
+
+/* Set the base frequency and the ratios for a fifth and octave up */
+osc1.frequency.value = {FREQ}
+osc2.frequency.value = {FREQ} * 1.5
+osc3.frequency.value = {FREQ} * 2
+
+/* Start the oscillators, playing the chord */
+osc1.start(0)
+osc2.start(0)
+osc3.start(0)</code></pre>
+					</section>
+
+					<section>
+						<button onclick='playWaveshapeChord("sine")'>sine</button>
+						<button onclick='playWaveshapeChord("square")'>square</button>
+						<button onclick='playWaveshapeChord("triangle")'>triangle</button>
+						<button onclick='playWaveshapeChord("sawtooth")'>sawtooth</button>
+					</section>
+
+					<section><h2 class='reg-case'>Signal Processing</h2></section>
+					<section>
+						<img src="images/filter.gif" alt="">
+					</section>
+
+					<section>
+<pre><code>// Create a filter node
+var filter = context.createBiquadFilter()
+
+// Set filter type
+filter.type = 'lowpass'
+
+// Set filter cutoff frequency
+filter.frequency.value = 20000
+
+// Connect oscillator through filter
+osc.connect(filter)</code></pre>
+					</section>
+
+					<section>
+						<button onclick='playWaveshapeChord("sine", 5000)'>sine</button>
+						<button onclick='playWaveshapeChord("square", 5000)'>square</button>
+						<button onclick='playWaveshapeChord("triangle", 5000)'>triangle</button>
+						<button onclick='playWaveshapeChord("sawtooth", 5000)'>sawtooth</button>
+
+						<br><br>
+
+						<h4 for="filterCutoff">Filter Cutoff</h4>
+						<input name="filterCutoff" type="range" min="200" max="10000" value="10000" oninput='setFilterCutoff(event.target.value)'/>
+					</section>
+
+					<section>
+						<h2 class='reg-case'>Modulation</h2>
+					</section>
+
+					<section>
+						<img src="images/modulation.gif" alt="">
+					</section>
+
+					<section>
+						<img src="images/lfo.gif" alt="">
+					</section>
+
+					<section>
+						<h3 class='reg-case'>... Modular Routing Graph.</h3>
+					</section>
+
+					<section>
+<pre><code>// Create control wave oscillator node
+var lfoGain = AUDIO.createGain()
+var lfo = AUDIO.createOscillator()
+
+// Create a filter node
+var filter = AUDIO.createBiquadFilter()
+
+// Set the LFO range with the LFO gain
+lfo.connect(lfoGain)
+
+// Control filter's frequency  with the LFO
+lfoGain.connect(filter.frequency)
+
+// Start the LFO
+lfo.start(0)</code></pre>
+					</section>
+
+					<section>
+						<button onclick='playLFOWaveshape("sawtooth", 5000)'>sawtooth</button>
+
+						<br><br>
+						<h4 for="lfoRate">LFO Rate</h4>
+						<input name="lfoRate" type="range" min="1" max="10" value="1" oninput='setLFORate(event.target.value)'/>
+					</section>
+
+					<section>
+						<h2 class='reg-case'>Envelope</h2>
+					</section>
+
+					<section>
+						<img src="images/adsr.jpg" alt="" class="stretch">
+					</section>
+
+					<section>
+						<img src="images/env.gif" alt="" class="stretch">
+					</section>
+
+					<section>
+						<button onclick='playADSRWaveshape()'>Play ADSR</button>
+
+						<br><br>
+						<h4 for="lfoRate">Envelope</h4>
+						<!-- <br> -->
+						<div class="adsr-input">
+							<small><h4 for="lfoRate">Attack</h4></small><br>
+							<br><br>
+							<input name="lfoRate" class="vrange" type="range" min="0" max="1000" value="0" oninput='setEnvelope("ATTACK",event.target.value)'/>
+						</div>
+						<div class="adsr-input">
+							<small><h4 for="lfoRate">Release</h4></small><br>
+							<br><br>
+							<input name="lfoRate" class="vrange" type="range" min="100" max="1000" value="250" oninput='setEnvelope("DECAY", event.target.value)'/>
+						</div>
+					</section>
+
+					<section>
+						<h2 class='reg-case'>Timing / Composition</h2>
+					</section>
+
+					<section>
+						<img class='img-clear' onclick='playSuperMario()' src="images/mushroom.png" alt="">
+					</section>
+				</section>
+
+				<section data-background-color="#F27900">
+					<section>
+						<h2 class="reg-case">🔊 Sampling 🔊</h2>
+					</section>
+					<section>
+						<img src="images/mpc.jpg" alt="" class="stretch">
+					</section>
+					<section>
+<pre><code>/* Decode arraybuffer sample */
+audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
+
+  /* Create an audio buffer source */
+  var source = AUDIO.createBufferSource()
+
+  /* assign buffer to source */
+  source.buffer = audioBuffer
+
+  /* connect to output */
+  source.connect(OUTPUT)
+
+  /* Start sample playback */
+  source.start(0)
+
+})</code></pre>
+  				</section>
+
+					<section>
+						<button onclick='playSample(BUFFERS.kick)'>Kick Drum</button>
+						<button onclick='playSample(BUFFERS.snare)'>Snare Drum</button>
+						<button onclick='playSample(BUFFERS.clap)'>Clap</button>
+						<button onclick='playSample(BUFFERS.closedhihat)'>Closed HiHat</button>
+						<button onclick='playSample(BUFFERS.openhihat)'>Open HiHat</button>
+					</section>
+
+					<section><img src="images/pattern.png" alt="" class="stretch"></section>
+
+					<section>
+<pre><code>
+function playSample(sample, time) {
+  /* Create a new audio source */
+  var source = AUDIO.createBufferSource()
+  source.buffer = sample
+
+  /* Connect source to output */
+  source.connect(OUTPUT)
+
+  /* Start the sample in a time in the future */
+  source.start(time || 0)
+}
+</code></pre>
+					</section>
+
+					<section>
+						<button onclick='playBeat()'>BEAT!</button>
+					</section>
+				</section>
+
+				<section data-background-color="#DDDA00">
+					<section>
+						<h2 class='reg-case'>🎹 Web MIDI 🎹</h2>
+					</section>
+					<section>
+						<img src="images/midi-logo.png">
+					</section>
+					<section>
+						<h3 class='reg-case'>Musical Instrument Digital Interface</h3>
+					</section>
+					<section>
+						<img src="images/midi.jpg" width='500'>
+					</section>
+					<section>
+						<img src="images/notes.jpg" alt="" class="stretch">
+					</section>
+
+					<section>
+						<h2 class='reg-case'>MIDI Access</h2>
+<pre><code>var midi = navigator.requestMIDIAccess().then(onMidiAccess)
+
+function onMidiAccess(midiAccess){
+  var inputs = midi.inputs.values()
+
+  // loop over all available inputs and listen for any MIDI input
+  for (let input of inputs) {
+    input.onmidimessage = onMIDIMessage
+  }
+}</code></pre>
+						</section>
+						<section>
+							<h2 class='reg-case'>MIDI Messages</h2>
+<pre><code>function onMIDIMessage(message){
+  var data = message.data; // [command/channel, note, velocity]
+
+  // Check for noteOn commands
+  if(data[0] === 144) {
+    // Play the note
+    playNote(data[1])
+  }
+}</code></pre>
+						</section>
+						<section>
+							<img src="images/f1.svg" height="50" style="padding:0.5em; margin:0.5em;" alt="">
+							<img src="images/f2.svg" height="50" style="padding:0.5em; margin:0.5em;" alt="">
+
+<pre><code>function midiNoteToFrequency(midiNote){
+  return Math.pow(2, (note - 69) / 12) * 440
+}</code></pre>
+						</section>
+						<!-- <section>
+							<h3 class="reg-case">MIDI in the browser</h3>
+							<h3 class="reg-case" id="midi-note-number">--</h3>
+							<small>
+								<h3 class="reg-case" id="midi-note">--</h3>
+							</small>
+							<small>
+								<h3 class="reg-case" id="midi-ratio">--</h3>
+							</small>
+							<small>
+								<h3 class="reg-case" id="midi-freq">--</h3>
+							</small>
+						</section> -->
+
+						<section>
+							<div id="keyboard"></div>
+							<br>
+							<code id="keyboard-label"></code>
+						</section>
+
+						<section>
+							<h2 class='reg-case'>MIDI CC</h2>
+							<h4 class='reg-case'>continuous controller</h4>
+						</section>
+
+						<section>
+							<h3 class="reg-case">Web MIDI Theremin</h3>
+							<div style="position:relative;">
+								<img src="images/theremin.png" alt="" class="img-clear" width="50%">
+								<img src="images/hand.png" alt="" class="theremin-hand img-clear" width="20%" id="theremin-hand">
+							</div>
+						</section>
+				</section>
+
+
+
+
+
+
+				<section data-background-color="#E6E8BF">
+					<!-- <section>
+						<h2 class='reg-case'>🎆 WebGL 🎆</h2>
+					</section> -->
+					<section>
+						<h2 class='reg-case'>📈 WebAudio Analyser 📉</h2>
+					</section>
+					<section>
+						<h3 class="reg-case">The analyser node provides real-time <strong>frequency</strong> and <strong>time-domain</strong> analysis information.</h3>
+					</section>
+					<section>
+						<img src="images/fft.png" alt="" class="stretch">
+					</section>
+					<section>
+						<h2 class='reg-case'>Time-Domain</h2>
+						<button onclick='playAmenBreak(true)'>PLAY</button>
+					</section>
+					<section>
+						<h2 class='reg-case'>Frequency</h2>
+						<button onclick='playAmenBreak()'>PLAY</button>
+					</section>
+					<section>
+						<h2 class="reg-case">Beat Detection</h2>
+					</section>
+					<section>
+						<img src="images/beat.png" alt="">
+					</section>
+					<section>
+						<h2 class='reg-case'>DETECT BEATS</h2>
+						<button onclick='playBrazil()'>PLAY</button>
+						<br>
+						<h4 id="beat-detect" class="hidden">BEAT!</h4>
+					</section>
+					<section>
+						<h2 class="reg-case">Pitch Detection</h2>
+					</section>
+					<section>
+						<img src="images/freq.jpg" alt="">
+					</section>
+					<section>
+						<button onclick='toggleLiveInput()'>DETECT PITCH</button>
+						<h4 id="pitch-detect-note">--</h4>
+						<small>
+							<h4 id="pitch-detect-freq">--</h4>
+						</small>
+					</section>
+				</section>
+
+				<section data-background-color="#E6E8BF">
+					<section>
+						<img src="images/rc.png" class="" alt="">
+						<h3>Recurse Center</h3>
+						<h4><strong>recurse.com</strong></h4>
+					</section>
+					<section>
+						<h1>Thanks!</h1>
+						<br>
+						<h3 class="reg-case">Barak Chamo</h3>
+						<h4 class="reg-case">@GoFoolhardy</h4>
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script src="lib/js/hancock.js"></script>
+		<script src="js/helpers/audio-viz.js"></script>
+		<script src="js/helpers/buffer-loader.js"></script>
+
+		<!-- Reveal.js bootstrap -->
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+
+		<!-- Visualization Setup -->
+		<script>
+			var CTX2D = document.getElementById('viz2d').getContext('2d'),
+					CTX3D = document.getElementById('viz3d').getContext('webgl')
+
+			// Handle slide changes
+			Reveal.addEventListener('slidechanged', function(event){
+				// Clear the canvas
+				CTX2D.clearRect(0, 0, CTX2D.canvas.width, CTX2D.canvas.height)
+			})
+
+			var WIDTH, HEIGHT
+
+			function setCanvasSize(){
+				WIDTH = window.innerWidth * 2
+				HEIGHT = window.innerHeight * 2
+
+				CTX2D.canvas.width = WIDTH
+				CTX3D.canvas.width = WIDTH
+
+				CTX2D.canvas.height = HEIGHT
+				CTX3D.canvas.height = HEIGHT
+			}
+
+			setCanvasSize()
+
+			window.onresize = setCanvasSize
+		</script>
+
+		<!-- WebAudio Setup -->
+		<script>
+			window.AudioContext = AudioContext || webkitAudioContext
+
+			var SMOOTHING = 0.85,
+					FFT_SIZE = 2048,
+					LFO_RATE = 1
+
+			// Envelope variables
+			var ENVELOPE = {
+				ATTACK: 10,
+				DECAY: 250,
+				SUSTAIN: 0,
+				RELEASE: 0
+			}
+
+			// Create audio context and related nodes
+			var AUDIO = new AudioContext(),
+					FILTER = AUDIO.createBiquadFilter(),
+					ANALYSER = AUDIO.createAnalyser(),
+					OUTPUT = AUDIO.createGain(),
+					MS = 60000
+
+			// Configure ANALYSER
+			ANALYSER.minDecibels = -140
+			ANALYSER.maxDecibels = 0
+
+			// Create bins
+			var FREQUENCIES = new Uint8Array(ANALYSER.frequencyBinCount),
+				  TIMEDOMAIN  = new Float32Array(ANALYSER.frequencyBinCount)
+
+			// Connect filter to output
+			FILTER.type = 'lowpass'
+		  FILTER.frequency.value = 20000
+		  FILTER.connect(OUTPUT)
+
+			// Connect base chain to analysis and system output
+			OUTPUT.gain.value = 0.5
+			OUTPUT.connect(ANALYSER)
+			OUTPUT.connect(AUDIO.destination)
+
+			function setFilterCutoff(cutoff){
+			  FILTER.frequency.value = cutoff
+			}
+
+			function setLFORate(rate){
+			  LFO_RATE = rate
+			}
+
+			function setEnvelope(value, duration){
+				ENVELOPE[value] = duration
+			}
+
+			function playSample(sample, time) {
+		    var source = AUDIO.createBufferSource()
+		    source.buffer = sample
+		    source.connect(OUTPUT)
+		    if (!source.start) source.start = source.noteOn
+		    source.start(time || 0)
+		  }
+		</script>
+
+		<!-- Keyboard setup -->
+		<script>
+		var keyboard = new QwertyHancock({
+			id: 'keyboard',
+			width: 600,
+			height: 150,
+			octaves: 2,
+			startNote: 'A3',
+			whiteKeyColour: 'white',
+			blackKeyColour: '#2F2E3E',
+      borderColour: '#000',
+      activeColour: '#E6E8BF',
+		})
+
+		// Keyboard's oscillator
+		var keyboardOsc,
+				keyboardLabel = document.getElementById('keyboard-label')
+
+		keyboard.keyDown = function (note, frequency) {
+			// Make sure previous keyboard note is off
+			keyboardOsc && keyboardOsc.stop()
+
+			// Initialize new OSC node
+			keyboardOsc = AUDIO.createOscillator()
+			keyboardOsc.connect(OUTPUT)
+			keyboardOsc.type = 'sawtooth'
+			keyboardOsc.frequency.value = frequency
+
+			// Start the new note
+			keyboardOsc.start()
+	    keyboardLabel.innerHTML = note + ' - ' + frequency.toFixed(2).replace('.00','') + 'hz'
+		}
+
+		keyboard.keyUp = function (note, frequency) {
+			keyboardOsc.stop()
+			keyboardLabel.innerHTML = ' '
+		}
+		</script>
+
+		<!-- Load Audio Samples as Buffers  -->
+		<script>
+			// store all loaded samples
+			var BUFFERS = {}
+
+			// An object to track the buffers to load {name: path}
+			var SAMPLES = {
+				amen: 'samples/amen.mp3',
+				brazil: 'samples/brazil.mp3',
+			  kick: 'samples/kick.wav',
+			  snare: 'samples/snare.wav',
+			  openhihat: 'samples/openhihat.wav',
+				closedhihat: 'samples/closedhihat.wav',
+			  clap: 'samples/clap.wav'
+			}
+
+			// Loads all sound samples into the buffers object.
+			function loadBuffers() {
+			  // Array-ify
+			  var names = []
+			  var paths = []
+			  for (var name in SAMPLES) {
+			    var path = SAMPLES[name]
+			    names.push(name)
+			    paths.push(path)
+			  }
+
+			  bufferLoader = new BufferLoader(AUDIO, paths, function(bufferList) {
+			    for (var i = 0; i < bufferList.length; i++) {
+			      var buffer = bufferList[i]
+			      var name = names[i]
+			      BUFFERS[name] = buffer
+			    }
+			  })
+			  bufferLoader.load()
+			}
+
+			loadBuffers()
+		</script>
+
+		<script src="js/slides/audio.js"></script>
+		<script src="js/slides/supermario.js"></script>
+		<script src="js/slides/theremin.js"></script>
+
+		<script src="js/helpers/midi.js"></script>
+		<script src="js/helpers/pitch-detect.js"></script>
+		<script src="js/helpers/beat-detect.js"></script>
+
+	</body>
+</html>
