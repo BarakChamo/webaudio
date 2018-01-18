@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 1 - Basic Tones</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">The basics of tone.</h1>
+            <p class="lead">Use the click handlers to make tones play in two different frequencies when each button is pressed.</p>
+            <p class="lead">
+              <a href="#" id="beep" class="btn btn-lg btn-secondary">BEEP!</a>
+              &nbsp;
+              <a href="#" id="boop" class="btn btn-lg btn-secondary">BOOP!</a>
+            </p>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <!-- <script src="../assets/js/bootstrap.bundle.js" charset="utf-8"></script> -->
+
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      var audio = new AudioContext();
+
+      // Assign "beep" handler
+      document.getElementById("beep").onclick = function onBeep() {
+        // Create an oscillator
+        var osc = audio.createOscillator();
+
+        // Set oscillator frequency
+        osc.frequency.value = 440;
+
+        //Connect oscillator to OUTPUT
+        osc.connect(audio.destination);
+
+        //Start oscillator
+        osc.start(0);
+
+        // Stop oscillator after 1 second
+        setTimeout(() => osc.stop(0), 100);
+      }
+
+      // Assign "boop" handler
+      document.getElementById("boop").onclick = function onBoop() {
+        // Create an oscillator
+        var osc = audio.createOscillator();
+
+        // Set oscillator frequency
+        osc.frequency.value = 220;
+
+        //Connect oscillator to OUTPUT
+        osc.connect(audio.destination);
+
+        //Start oscillator
+        osc.start(0);
+
+        // Stop oscillator after 1 second
+        setTimeout(() => osc.stop(0), 100);
+      }
+    </script>
+  </body>
+</html>

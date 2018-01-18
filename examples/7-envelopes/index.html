@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 7 - Envelopes</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Evolving sounds over time with envelopes.</h1>
+            <p class="lead">Use the slider values to control the ADSR enveope values.</p>
+
+            <p class="lead">
+              <a href="#" id="play" class="btn btn-lg btn-secondary">Play Sawtooth</a>
+            </p>
+            <p class="lead">
+              <input id="attack" name="attack" type="range" min="0" max="1000" value="10"/>
+              <input id="decay" name="decay" type="range" min="10" max="1000" value="250"/>
+            </p>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <!-- <script src="../assets/js/bootstrap.bundle.js" charset="utf-8"></script> -->
+
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      var audio = new AudioContext();
+
+      // Initial envelope values
+      var env = {
+				attack: 10,
+				decay: 250,
+			}
+
+      // Assign "play" handler
+      document.getElementById("play").onclick = function onPlay() {
+        var gain = audio.createGain(),
+      		  osc = audio.createOscillator(),
+            freq = 173.3
+
+        // Configure the gain curve according the ADSR values
+      	gain.connect(audio.destination)
+      	gain.gain.setValueAtTime(0, audio.currentTime)
+      	gain.gain.linearRampToValueAtTime(0.1, audio.currentTime + env.attack / 1000)
+      	gain.gain.linearRampToValueAtTime(0, audio.currentTime + env.decay / 1000 + env.attack / 1000)
+
+        // Start the oscillator
+      	osc.frequency.value = freq
+      	osc.type = 'square'
+      	osc.connect(gain)
+      	osc.start(0)
+
+        // wait for the overell envelope time to complete before killing the oscillator
+      	setTimeout(function(){
+      		osc.stop(0)
+      		osc.disconnect(gain)
+      		gain.disconnect(audio.destination)
+      	}, env.decay + env.attack)
+      }
+
+      // Handle attack values
+      document.getElementById("attack").oninput = function onFilter() {
+        env.attack = +document.getElementById("attack").value;
+      }
+
+      // Handle decay values
+      document.getElementById("decay").oninput = function onFilter() {
+        env.decay = +document.getElementById("decay").value;
+      }
+
+    </script>
+  </body>
+</html>

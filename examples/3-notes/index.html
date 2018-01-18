@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 3 - Playing notes</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Working with control inputs.</h1>
+            <p class="lead">Make this keyboard do something LOL.</p>
+            <div id="keyboard"></div>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <!-- <script src="../assets/js/bootstrap.bundle.js" charset="utf-8"></script> -->
+
+    <script src="../assets/js/hancock.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      var audio = new AudioContext();
+      var osc;
+
+      var keyboard = new QwertyHancock({
+  			id: 'keyboard',
+  			width: 600,
+  			height: 150,
+  			octaves: 2,
+  			startNote: 'A3',
+  			whiteKeyColour: 'white',
+  			blackKeyColour: '#2F2E3E',
+        borderColour: '#000',
+        activeColour: '#E6E8BF',
+  		})
+
+      keyboard.keyDown = function (note, frequency) {
+        // Make sure previous keyboard note is off
+  			osc && osc.stop();
+
+  			// Initialize new OSC node
+  			osc = audio.createOscillator()
+  			osc.connect(audio.destination);
+  			osc.type = 'sawtooth';
+  			osc.frequency.value = frequency;
+
+  			// Start the new note
+  			osc.start();
+  		}
+
+  		keyboard.keyUp = function (note, frequency) {
+        osc.stop();
+  		}
+
+    </script>
+  </body>
+</html>

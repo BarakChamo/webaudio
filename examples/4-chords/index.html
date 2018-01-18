@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 1 - Playing Chords</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Working with chords and polyphony.</h1>
+            <p class="lead">Define a handler to play a C3 Major triad (1-3-5) at once.</p>
+            <p>hint: A triad has 3 notes, that means 3 oscillators.</p>
+
+            <p class="lead">
+              <a href="#" id="chord" class="btn btn-lg btn-secondary">So Major!</a>
+            </p>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <!-- <script src="../assets/js/bootstrap.bundle.js" charset="utf-8"></script> -->
+
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      // var audio = new AudioContext();
+
+      // Assign "sqr" handler
+      document.getElementById("chord").onclick = function onChord() {
+        console.log("chord!");
+      }
+
+    </script>
+  </body>
+</html>

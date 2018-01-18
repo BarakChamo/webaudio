@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 9 - MIDI</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Working with WebMIDI.</h1>
+            <p class="lead">Using the WebMIDI API to access MIDI devices from the browser.</p>
+            <p>Is this shit cool or what?!?</p>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <!-- <script src="../assets/js/bootstrap.bundle.js" charset="utf-8"></script> -->
+
+    <script src="../assets/js/hancock.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      var audio = new AudioContext();
+
+      function noteToFreq(note){
+        return Math.pow(2, (note - 69) / 12) * 440
+      }
+
+      function noteToRatio(note){
+        return Math.pow(2, (note - 69) / 12)
+      }
+
+      // request MIDI access
+      if (navigator.requestMIDIAccess) {
+          navigator.requestMIDIAccess({ sysex: false }).then(onMIDISuccess, onMIDIFailure)
+      } else {
+          alert("No MIDI support in your browser.")
+      }
+
+      // handle succesful midi connections
+      function onMIDISuccess(midi) {
+        var inputs = midi.inputs.values()
+
+        for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+          input.value.onmidimessage = onMIDIMessage
+        }
+      }
+
+      function onMIDIFailure(e) {
+          // when we get a failed response, run this code
+          console.log("No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim " + e)
+      }
+
+      function onMIDIMessage(message) {
+          data = message.data; // this gives us our [command/channel, note, velocity] data.
+
+          var data = event.data,
+              cmd = data[0] >> 4,
+              channel = data[0] & 0xf,
+              type = data[0] & 0xf0, // channel agnostic message type. Thanks, Phil Burk.
+              note = data[1],
+              velocity = data[2]
+
+          if (type === 144) {
+            var freq = noteToFreq(note)
+
+            // #########################
+            // ## DO YOUR THING HERE! ##
+            // #########################
+
+          }
+      }
+
+    </script>
+  </body>
+</html>

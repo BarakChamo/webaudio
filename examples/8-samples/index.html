@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 8 - Playing Samples</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Working with audio samples.</h1>
+            <p class="lead">Please make a sick beat.</p>
+
+            <p class="lead">
+              <a href="#" data-sample="kick" class="btn btn-lg btn-secondary">Kick</a>
+              &nbsp;
+              <a href="#" data-sample="snare" class="btn btn-lg btn-secondary">Snare</a>
+              &nbsp;
+              <a href="#" data-sample="clap" class="btn btn-lg btn-secondary">Clap</a>
+            </p>
+            <p class="lead">
+              <a href="#" data-sample="openhihat" class="btn btn-lg btn-secondary">Open hat</a>
+              &nbsp;
+              <a href="#" data-sample="closedhihat" class="btn btn-lg btn-secondary">Closed hat</a>
+            </p>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <script src="../assets/js/buffer-loader.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      var audio = new AudioContext();
+
+      // store all loaded samples
+			var samples = {}
+
+			// An object to track the buffers to load {name: path}
+			var samplePaths = {
+			  kick: '../assets/samples/kick.wav',
+			  snare: '../assets/samples/snare.wav',
+			  openhihat: '../assets/samples/openhihat.wav',
+				closedhihat: '../assets/samples/closedhihat.wav',
+			  clap: '../assets/samples/clap.wav'
+			}
+
+      // An object to track the buffers to load {name: path}
+			var keyMappings = {
+			  '1': 'kick',
+			  '2': 'snare',
+			  '3': 'openhihat',
+				'4': 'closedhihat',
+			  '5': 'clap',
+			}
+
+			// Loads all sound samples into the buffers object.
+      var sampleKeys = Object.keys(samplePaths)
+      var loader = new BufferLoader(audio, Object.values(samplePaths), function(bufferList) {
+        for (var i = 0; i < bufferList.length; i++) {
+          // Store loaded buffer by key
+          samples[sampleKeys[i]] = bufferList[i]
+        }
+      })
+
+      loader.load();
+
+      // Assign sample handlers
+      Array.slice(document.getElementsByClassName("btn"), 0).forEach(elm => {
+        elm.onclick = () => playSample(elm.attributes["data-sample"].value);
+      });
+
+      // Handle key presses as mapped in keyMappings
+      document.onkeydown = e => keyMappings[e.key] && playSample(keyMappings[e.key])
+
+      // Sample player handler
+      function playSample(sample) {
+        // What's playing?
+        console.log(sample);
+
+        // Play the samples by name
+        var source = audio.createBufferSource()
+		    source.buffer = samples[sample]
+		    source.connect(audio.destination)
+		    if (!source.start) source.start = source.noteOn
+		    source.start(0)
+      }
+
+    </script>
+  </body>
+</html>

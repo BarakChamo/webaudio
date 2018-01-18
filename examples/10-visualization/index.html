@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 10 - Audio Visualization</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Visualising sound with the Analyser.</h1>
+            <p class="lead">Use the analyser to visualize time-domain and frequency.</p>
+
+            <p class="lead">
+              <a href="#" id="play" class="btn btn-lg btn-secondary">Play Sawtooth</a>
+            </p>
+            <p class="lead">
+              <input id="lfo" type="range" min="1" max="10" value="1"/>
+            </p>
+            <p class="lead">
+              <a href="#" id="timedomain" class="btn btn-lg btn-secondary">Time Doamin</a>
+              <a href="#" id="freqs" class="btn btn-lg btn-secondary">Frequencies</a>
+            </p>
+            <canvas id="viz" style="width: 300px; height: 150px; background: white;"></canvas>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      // Initialize new AudioContext instance, canvas context and audio analyser
+      var audio = new AudioContext();
+      var ctx = document.getElementById('viz').getContext('2d');
+      var analyser = audio.createAnalyser();
+
+      // analyser constants
+      var SMOOTHING = 0.85, FFT_SIZE = 2048;
+
+      // Create data bins
+			var freqs = new Uint8Array(analyser.frequencyBinCount),
+				  timedomain  = new Float32Array(analyser.frequencyBinCount)
+
+      // Configure Analyser
+			analyser.minDecibels = -140
+			analyser.maxDecibels = 0
+
+      // Configure filter
+      var filter = audio.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 5000;
+
+      filter.connect(audio.destination);
+      filter.connect(analyser); // THIS IS IMPORTANT
+
+      // Initialize LFO oscillators
+      var lfoGain = audio.createGain();
+      var lfo = audio.createOscillator();
+
+      // Connect LFO to filter frequency as control signal
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+
+      lfo.frequency.value = 1;
+      lfoGain.gain.value = 2500;
+
+      // Start the LFO oscillator
+      lfo.start();
+
+      // Assign "play" handler
+      document.getElementById("play").onclick = function onPlay() {
+        // Create an oscillator
+        var osc = audio.createOscillator();
+
+        // Set oscillator frequency
+        osc.frequency.value = 220;
+
+        // Set oscillator waveform to sawtooth
+        osc.type = 'sawtooth';
+
+        //Connect oscillator to output
+        osc.connect(filter);
+
+        //Start oscillator
+        osc.start(0);
+
+        // stop after 3 seconds
+        setTimeout(() => osc.stop(0), 3000);
+      }
+
+      // Handle filter values
+      document.getElementById("lfo").oninput = function onFilter() {
+        // Parse new filte value (it's a string)
+        var lfoRate = +document.getElementById("lfo").value;
+        lfo.frequency.value = lfoRate
+      }
+
+      // Draw the visualization
+      function drawTimeDomain(){
+        analyser.smoothingTimeConstant = SMOOTHING
+        analyser.fftSize = FFT_SIZE
+
+        analyser.getFloatTimeDomainData(timedomain)
+
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+        ctx.beginPath()
+        ctx.moveTo(0,150)
+        ctx.strokeStyle = '#333'
+        ctx.lineWidth=15
+        ctx.lineJoin = ctx.lineCap = 'round';
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = 'rgb(0, 0, 0)';
+
+        for (var i = 0; i < analyser.frequencyBinCount; i++) {
+          var value = timedomain[i]
+          // console.log(value)
+          var percent = value// / 256
+          var height = 150 * percent
+          var offset = 150 - height - 1
+          var barWidth = 300 / analyser.frequencyBinCount
+          // ctx.fillStyle = 'black'
+          // ctx.fillRect(i * barWidth, offset, 1, 2)
+          ctx.lineTo(i * barWidth, offset / 2)
+        }
+
+        ctx.stroke()
+      }
+
+      function drawFrequency() {
+        analyser.smoothingTimeConstant = SMOOTHING
+        analyser.fftSize = FFT_SIZE
+
+        analyser.getByteFrequencyData(freqs)
+
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+        ctx.strokeStyle = '#333'
+        ctx.shadowBlur = 0
+        ctx.shadowColor = undefined
+
+        var barWidth = (300 / analyser.frequencyBinCount) * 2.5,
+            barHeight,
+            x = 0;
+
+        for (var i = 0; i < analyser.frequencyBinCount; i++) {
+          var value = freqs[i]
+          barHeight = 150 * (value/256)
+
+          ctx.fillStyle = '#333'
+          ctx.fillRect(x,150-barHeight/2,barWidth,barHeight)
+
+          x += barWidth + 1
+        }
+
+        ctx.stroke()
+      }
+
+      // Check for button presses
+      var drawt = false, drawf = false;
+
+      // Listen for clicks
+      document.getElementById("timedomain").onmousedown = e => { drawt = true; }
+      document.getElementById("timedomain").onmouseup = e => { drawt = false; }
+      document.getElementById("freqs").onmousedown = e => { drawf = true; }
+      document.getElementById("freqs").onmouseup = e => { drawf = false; }
+
+      // Draw visualization
+      function draw() {
+        if (drawt) drawTimeDomain();
+        if (drawf) drawFrequency();
+        requestAnimationFrame(draw);
+      }
+
+      // Start visualization
+      requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>

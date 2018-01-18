@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Example 2 - Basic Waveforms</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">The basics of waveform.</h1>
+            <p class="lead">Use the click handlers to make each button play a note using a different waveform.</p>
+            <p class="lead">
+              <a href="#" id="sqr" class="btn btn-lg btn-secondary">Square</a>
+              &nbsp;
+              <a href="#" id="saw" class="btn btn-lg btn-secondary">Saw</a>
+              &nbsp;
+              <a href="#" id="sin" class="btn btn-lg btn-secondary">Sine</a>
+              &nbsp;
+              <a href="#" id="tri" class="btn btn-lg btn-secondary">Triangle</a>
+            </p>
+          </main>
+          <footer class="mastfoot">
+            <div class="inner">
+              <p>WebAudio workshop by <a href="https://www.barakchamo.com/" target="_blank">this guy.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="../assets/js/bootstrap.js" charset="utf-8"></script> -->
+    <!-- <script src="../assets/js/bootstrap.bundle.js" charset="utf-8"></script> -->
+
+    <script type="text/javascript">
+      // Initialize new AudioContext instance
+      var audio = new AudioContext();
+
+      function playSound(waveshape) {
+        // Create an oscillator
+        var osc = audio.createOscillator();
+
+        // Set oscillator frequency
+        osc.frequency.value = 220;
+
+        // Set oscillator waveform
+        osc.type = waveshape;
+
+        //Connect oscillator to OUTPUT
+        osc.connect(audio.destination);
+
+        //Start oscillator
+        osc.start(0);
+
+        // stop after a bit
+        setTimeout(() => osc.stop(0), 1000);
+      }
+
+      // Assign "sqr" handler
+      document.getElementById("sqr").onclick = function onSqr() {
+        // Play square wave
+        playSound("square");
+      }
+
+      // Assign "saw" handler
+      document.getElementById("saw").onclick = function onSaw() {
+        // Play saw wave
+        playSound("sawtooth");
+      }
+
+      // Assign "sin" handler
+      document.getElementById("sin").onclick = function onSin() {
+        // Play sine wave
+        playSound("sine");
+      }
+
+      // Assign "tri" handler
+      document.getElementById("tri").onclick = function onTri() {
+        // Play triangle wave
+        playSound("triangle");
+      }
+
+    </script>
+  </body>
+</html>
