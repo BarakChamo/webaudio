@@ -51,6 +51,7 @@
       function onMIDISuccess(midi) {
         var inputs = midi.inputs.values()
 
+
         for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
           input.value.onmidimessage = onMIDIMessage
         }
@@ -73,6 +74,7 @@
 
           if (type === 144) {
             var freq = noteToFreq(note)
+            console.log(note, freq)
 
             // #########################
             // ## DO YOUR THING HERE! ##
