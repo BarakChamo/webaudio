@@ -39,7 +39,7 @@
 
       var filter = audio.createBiquadFilter()
       filter.type = 'lowpass'
-      filter.frequency.value = 20000
+      filter.frequency.value = 10000
       filter.connect(audio.destination)
 
       var cutoff = +document.getElementById("filter").value;
@@ -62,7 +62,7 @@
         osc.start(0);
 
         // stop after 3 seconds
-        setTimeout(() => osc.stop(0), 3000);
+        setTimeout(() => osc.stop(0), 5000);
       }
 
       // Handle filter values

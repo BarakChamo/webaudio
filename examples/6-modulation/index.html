@@ -37,11 +37,6 @@
       // Initialize new AudioContext instance
       var audio = new AudioContext();
 
-      // #############################################
-      // ## Hmmm... we're missing the filter step   ##
-      // ## We're connecting straight to the output ##
-      // #############################################
-
       // Configure filter
       var filter = audio.createBiquadFilter()
       filter.type = 'lowpass'
@@ -68,7 +63,7 @@
         var osc = audio.createOscillator();
 
         // Set oscillator frequency
-        osc.frequency.value = 110;
+        osc.frequency.value = 220;
 
         // Set oscillator waveform to sawtooth
         osc.type = 'sawtooth';
@@ -87,7 +82,7 @@
       document.getElementById("lfo").oninput = function onFilter() {
         // Parse new filte value (it's a string)
         var lfoRate = +document.getElementById("lfo").value;
-        console.log(lfoRate);
+
         lfo.frequency.value = lfoRate
       }
 

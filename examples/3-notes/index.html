@@ -31,7 +31,7 @@
     <script type="text/javascript">
       // Initialize new AudioContext instance
       var audio = new AudioContext();
-      var osc;
+      var osc1, osc2, osc3;
 
       var keyboard = new QwertyHancock({
   			id: 'keyboard',
@@ -46,21 +46,48 @@
   		})
 
       keyboard.keyDown = function (note, frequency) {
+        console.log(note, frequency);
         // Make sure previous keyboard note is off
-  			osc && osc.stop();
+  			osc1 && osc1.stop();
 
   			// Initialize new OSC node
-  			osc = audio.createOscillator()
-  			osc.connect(audio.destination);
-  			osc.type = 'sawtooth';
-  			osc.frequency.value = frequency;
+  			osc1 = audio.createOscillator()
+  			osc1.connect(audio.destination);
+  			osc1.type = 'square';
+  			osc1.frequency.value = frequency;
 
   			// Start the new note
-  			osc.start();
+  			osc1.start();
+
+        // Make sure previous keyboard note is off
+  			osc2 && osc2.stop();
+
+  			// Initialize new OSC node
+  			osc2 = audio.createOscillator()
+  			osc2.connect(audio.destination);
+  			osc2.type = 'square';
+  			osc2.frequency.value = frequency * 1.5;
+
+  			// Start the new note
+  			osc2.start();
+
+        // Make sure previous keyboard note is off
+  			osc3 && osc3.stop();
+
+  			// Initialize new OSC node
+  			osc3 = audio.createOscillator()
+  			osc3.connect(audio.destination);
+  			osc3.type = 'square';
+  			osc3.frequency.value = frequency * 2;
+
+  			// Start the new note
+  			osc3.start();
   		}
 
   		keyboard.keyUp = function (note, frequency) {
-        osc.stop();
+        osc1.stop();
+        osc2.stop();
+        osc3.stop();
   		}
 
     </script>

@@ -76,10 +76,20 @@
             var freq = noteToFreq(note)
             console.log(note, freq)
 
-            // #########################
-            // ## DO YOUR THING HERE! ##
-            // #########################
+            // Create an oscillator
+            var osc = audio.createOscillator();
 
+            // Set oscillator frequency
+            osc.frequency.value = freq;
+
+            //Connect oscillator to OUTPUT
+            osc.connect(audio.destination);
+
+            //Start oscillator
+            osc.start(0);
+
+            // Stop oscillator after 1 second
+            setTimeout(() => osc.stop(0), 100);
           }
       }
 
